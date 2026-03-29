@@ -4,25 +4,25 @@ import java.util.List;
 
 public class Dish {
 
-    private Long id;
+    private int id;
     private String name;
     private Double sellingPrice;
-    private List<Ingredient> ingredients;
+    private List<DishIngredient> dishIngredients;
 
     public Dish() {}
 
-    public Dish(Long id, String name, Double sellingPrice, List<Ingredient> ingredients) {
+    public Dish(int id, String name, Double sellingPrice, List<DishIngredient> dishIngredients) {
         this.id = id;
         this.name = name;
         this.sellingPrice = sellingPrice;
-        this.ingredients = ingredients;
+        this.dishIngredients = dishIngredients;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -42,11 +42,10 @@ public class Dish {
         this.sellingPrice = sellingPrice;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<DishIngredient> getDishIngredients() {
+        return dishIngredients;
     }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setDishIngredients(List<DishIngredient> dishIngredients) {
+        this.dishIngredients = dishIngredients;
     }
 }

@@ -2,25 +2,25 @@ package SpringBoot.td5.entity;
 
 public class Ingredient {
 
-    private Long id;
+    private int id;
     private String name;
     private Double price;
     private CategoryEnum category;
 
     public Ingredient() {}
 
-    public Ingredient(Long id, String name, Double price, CategoryEnum category) {
+    public Ingredient(int id, String name, Double price, CategoryEnum category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

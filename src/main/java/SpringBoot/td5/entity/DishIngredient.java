@@ -2,42 +2,38 @@ package SpringBoot.td5.entity;
 
 public class DishIngredient {
 
-    private Long dishId;
-    private Long ingredientId;
-    private Double quantity;
+   private int dishId;
+    private Ingredient ingredient;
+    private Double requiredQuantity;
     private String unit;
 
-    public DishIngredient() {}
-
-    public DishIngredient(Long dishId, Long ingredientId, Double quantity, String unit) {
+    public DishIngredient(int dishId, Ingredient ingredient,
+                          Double requiredQuantity, String unit) {
         this.dishId = dishId;
-        this.ingredientId = ingredientId;
-        this.quantity = quantity;
+        this.ingredient = ingredient;
+        this.requiredQuantity = requiredQuantity;
         this.unit = unit;
     }
 
-    public Long getDishId() {
+    public int getDishId() {
         return dishId;
     }
 
-    public void setDishId(Long dishId) {
+    public void setDishId(int dishId) {
         this.dishId = dishId;
     }
 
-    public Long getIngredientId() {
-        return ingredientId;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
-
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
-
-    public Double getQuantity() {
-        return quantity;
+    public Double getRequiredQuantity() {
+        return requiredQuantity;
     }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    public void setRequiredQuantity(Double requiredQuantity) {
+        this.requiredQuantity = requiredQuantity;
     }
 
     public String getUnit() {
