@@ -4,59 +4,49 @@ import java.time.Instant;
 
 public class StockMovement {
 
-    private Long id;
-    private Long ingredientId;
-    private Double quantity;
-    private String unit;
-    private Instant movementDate;
+    private Integer id;
+    private StockValue value;
+    private MovementTypeEnum type;
+    private Instant creationDatetime;
 
     public StockMovement() {}
 
-    public StockMovement(Long id, Long ingredientId, Double quantity, String unit, Instant movementDate) {
+    public StockMovement(Integer id, StockValue value, MovementTypeEnum type, Instant creationDatetime) {
         this.id = id;
-        this.ingredientId = ingredientId;
-        this.quantity = quantity;
-        this.unit = unit;
-        this.movementDate = movementDate;
+        this.value = value;
+        this.type = type;
+        this.creationDatetime = creationDatetime;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public StockValue getValue() {
+        return value;
+    }
+
+    public MovementTypeEnum getType() {
+        return type;
+    }
+
+    public Instant getCreationDatetime() {
+        return creationDatetime;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getIngredientId() {
-        return ingredientId;
+    public void setValue(StockValue value) {
+        this.value = value;
     }
 
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
+    public void setType(MovementTypeEnum type) {
+        this.type = type;
     }
 
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public Instant getMovementDate() {
-        return movementDate;
-    }
-
-    public void setMovementDate(Instant movementDate) {
-        this.movementDate = movementDate;
+    public void setCreationDatetime(Instant creationDatetime) {
+        this.creationDatetime = creationDatetime;
     }
 }

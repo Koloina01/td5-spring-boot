@@ -2,45 +2,59 @@ package SpringBoot.td5.entity;
 
 public class DishIngredient {
 
-   private int dishId;
+    private Integer id;
+    private Dish dish;
     private Ingredient ingredient;
-    private Double requiredQuantity;
-    private String unit;
+    private Double quantityRequired;
+    private UnitType unit;
 
-    public DishIngredient(int dishId, Ingredient ingredient,
-                          Double requiredQuantity, String unit) {
-        this.dishId = dishId;
+    public DishIngredient() {}
+
+    public DishIngredient(Integer id, Dish dish, Ingredient ingredient, Double quantityRequired, UnitType unit) {
+        this.id = id;
+        this.dish = dish;
         this.ingredient = ingredient;
-        this.requiredQuantity = requiredQuantity;
+        this.quantityRequired = quantityRequired;
         this.unit = unit;
     }
 
-    public int getDishId() {
-        return dishId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDishId(int dishId) {
-        this.dishId = dishId;
+    public Dish getDish() {
+        return dish;
     }
 
     public Ingredient getIngredient() {
         return ingredient;
     }
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
-    public Double getRequiredQuantity() {
-        return requiredQuantity;
-    }
-    public void setRequiredQuantity(Double requiredQuantity) {
-        this.requiredQuantity = requiredQuantity;
+
+    public Double getQuantityRequired() {
+        return quantityRequired;
     }
 
-    public String getUnit() {
+    public UnitType getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setDish(Dish dish) {
+        this.dish = dish;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public void setQuantityRequired(Double quantityRequired) {
+        this.quantityRequired = quantityRequired;
+    }
+
+    public void setUnit(UnitType unit) {
         this.unit = unit;
     }
 }

@@ -4,48 +4,72 @@ import java.util.List;
 
 public class Dish {
 
-    private int id;
+    private Integer id;
+    private Double price;
     private String name;
-    private Double sellingPrice;
+    private DishTypeEnum dishType;
     private List<DishIngredient> dishIngredients;
 
     public Dish() {}
 
-    public Dish(int id, String name, Double sellingPrice, List<DishIngredient> dishIngredients) {
+    public Dish(Integer id, String name, DishTypeEnum dishType, List<DishIngredient> dishIngredients) {
         this.id = id;
         this.name = name;
-        this.sellingPrice = sellingPrice;
+        this.dishType = dishType;
         this.dishIngredients = dishIngredients;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Double getPrice() {
+        return price;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getSellingPrice() {
-        return sellingPrice;
-    }
-
-    public void setSellingPrice(Double sellingPrice) {
-        this.sellingPrice = sellingPrice;
+    public DishTypeEnum getDishType() {
+        return dishType;
     }
 
     public List<DishIngredient> getDishIngredients() {
         return dishIngredients;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDishType(DishTypeEnum dishType) {
+        this.dishType = dishType;
+    }
+
     public void setDishIngredients(List<DishIngredient> dishIngredients) {
         this.dishIngredients = dishIngredients;
+    }
+    public Double getDishCost() {
+
+        double total = 0;
+
+        for (DishIngredient di : dishIngredients) {
+            total += di.getIngredient().getPrice() * di.getQuantityRequired();
+        }
+
+        return total;
+    }
+
+    public Double getGrossMargin() {
+        return price - getDishCost();
     }
 }
