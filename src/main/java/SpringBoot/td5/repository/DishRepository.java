@@ -2,6 +2,7 @@ package SpringBoot.td5.repository;
 
 import SpringBoot.td5.entity.*;
 import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,7 +32,35 @@ public class DishRepository {
                 dish.setName(rs.getString("name"));
                 dish.setDishType(DishTypeEnum.valueOf(rs.getString("dish_type")));
                 dish.setPrice(rs.getObject("price") == null ? null : rs.getDouble("price"));
+                dish.setDishIngredients(findDishIngredientsByDishId(dishId, conn));
+                dishes.add(dish);
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return dishes;
+    }
+
+    public List<Dish> findAllFiltered(Double priceUnder, Double priceOver, String nameFilter) {
+        List<Dish> dishes = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT id, name, dish_type, price FROM dish WHERE 1=1");
+        if (priceUnder != null) sql.append(" AND price < ").append(priceUnder);
+        if (priceOver != null) sql.append(" AND price > ").append(priceOver);
+        if (nameFilter != null && !nameFilter.isEmpty()) sql.append(" AND name ILIKE '%").append(nameFilter).append("%'");
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Dish dish = new Dish();
+                int dishId = rs.getInt("id");
+                dish.setId(dishId);
+                dish.setName(rs.getString("name"));
+                dish.setDishType(DishTypeEnum.valueOf(rs.getString("dish_type")));
+                dish.setPrice(rs.getObject("price") == null ? null : rs.getDouble("price"));
                 dish.setDishIngredients(findDishIngredientsByDishId(dishId, conn));
                 dishes.add(dish);
             }
@@ -56,7 +85,6 @@ public class DishRepository {
                     dish.setName(rs.getString("name"));
                     dish.setDishType(DishTypeEnum.valueOf(rs.getString("dish_type")));
                     dish.setPrice(rs.getObject("price") == null ? null : rs.getDouble("price"));
-
                     dish.setDishIngredients(findDishIngredientsByDishId(id, conn));
                     return dish;
                 } else {
@@ -69,7 +97,7 @@ public class DishRepository {
         }
     }
 
-    private List<DishIngredient> findDishIngredientsByDishId(Integer dishId, Connection conn) throws SQLException {
+    private List<DishIngredient> findDishIngredientsByDishId(Integer dishId, Connection conn) {
         List<DishIngredient> list = new ArrayList<>();
         String sql = """
                 SELECT di.id_dish, di.id_ingredient, i.name, i.price, i.category, di.quantity_required, di.unit
@@ -77,7 +105,6 @@ public class DishRepository {
                 JOIN Ingredient i ON i.id = di.id_ingredient
                 WHERE di.id_dish = ?
                 """;
-
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, dishId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -96,8 +123,9 @@ public class DishRepository {
                     list.add(di);
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
         return list;
     }
 
@@ -131,5 +159,53 @@ public class DishRepository {
         }
 
         return findDishById(dishId);
+    }
+
+    private boolean existsByName(String name, Connection conn) {
+        String sql = "SELECT COUNT(*) FROM dish WHERE name = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Dish> createDishes(List<Dish> dishes) {
+        List<Dish> created = new ArrayList<>();
+        String sql = "INSERT INTO dish(name, dish_type, price) VALUES (?, ?, ?)";
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            for (Dish dish : dishes) {
+                if (existsByName(dish.getName(), conn)) {
+                    throw new RuntimeException("Dish.name=" + dish.getName() + " already exists");
+                }
+
+                try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, dish.getName());
+                    ps.setObject(2, dish.getDishType().name(), java.sql.Types.OTHER);
+                    ps.setDouble(3, dish.getPrice());
+                    ps.executeUpdate();
+
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            dish.setId(rs.getInt(1));
+                        }
+                    }
+                }
+                dish.setDishIngredients(new ArrayList<>());
+                created.add(dish);
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return created;
     }
 }
