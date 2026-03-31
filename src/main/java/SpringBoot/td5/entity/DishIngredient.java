@@ -1,8 +1,11 @@
 package SpringBoot.td5.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 public class DishIngredient {
 
     private Integer id;
+    @JsonBackReference
     private Dish dish;
     private Ingredient ingredient;
     private Double quantityRequired;
