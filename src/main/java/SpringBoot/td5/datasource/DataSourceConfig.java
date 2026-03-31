@@ -2,19 +2,20 @@ package SpringBoot.td5.datasource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-
 import javax.sql.DataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 
 @Configuration
 public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
+
         return DataSourceBuilder.create()
-                .url(System.getenv("JDBC_URL"))
-                .username(System.getenv("USERNAME"))
-                .password(System.getenv("PASSWORD"))
+                .url("jdbc:postgresql://localhost:5432/td5_db")
+                .username("postgres")
+                .password("Kokoo271107.")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 }
