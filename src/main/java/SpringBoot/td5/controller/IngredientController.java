@@ -46,7 +46,7 @@ public class IngredientController {
 
         if (at == null || unit == null) {
             return ResponseEntity.badRequest()
-                    .body("Missing parameters");
+                    .body("Either mandatory query parameter `at` or `unit` is not provided.");
         }
 
         try {
@@ -58,7 +58,11 @@ public class IngredientController {
 
             return ResponseEntity.ok(stock);
 
-        } catch (Exception e) {
+        }catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                .body("Invalid `at` or `unit` value.");
+
+        }catch (Exception e) {
             return ResponseEntity.status(404)
                     .body("Ingredient.id=" + id + " is not found");
         }
