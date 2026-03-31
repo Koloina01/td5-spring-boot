@@ -31,7 +31,7 @@ public class IngredientController {
     public ResponseEntity<?> getIngredient(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(ingredientRepository.findById(id));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(404)
                     .body("Ingredient.id=" + id + " is not found");
         }
@@ -43,10 +43,9 @@ public class IngredientController {
             @RequestParam(required = false) String at,
             @RequestParam(required = false) String unit
     ) {
-
         if (at == null || unit == null) {
             return ResponseEntity.badRequest()
-                    .body("Either mandatory query parameter `at` or `unit` is not provided.");
+                    .body("Query parameters `at` and `unit` are required.");
         }
 
         try {
@@ -58,11 +57,11 @@ public class IngredientController {
 
             return ResponseEntity.ok(stock);
 
-        }catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                .body("Invalid `at` or `unit` value.");
+                    .body("Invalid `at` or `unit` value.");
 
-        }catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(404)
                     .body("Ingredient.id=" + id + " is not found");
         }
