@@ -2,18 +2,23 @@ package SpringBoot.td5.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 public class Dish {
 
     private Integer id;
     private Double price;
     private String name;
     private DishTypeEnum dishType;
+    @JsonManagedReference
     private List<DishIngredient> dishIngredients;
 
-    public Dish() {}
+    public Dish() {
+    }
 
-    public Dish(Integer id, String name, DishTypeEnum dishType, List<DishIngredient> dishIngredients) {
+    public Dish(Integer id, Double price, String name, DishTypeEnum dishType, List<DishIngredient> dishIngredients) {
         this.id = id;
+        this.price = price;
         this.name = name;
         this.dishType = dishType;
         this.dishIngredients = dishIngredients;
@@ -58,14 +63,15 @@ public class Dish {
     public void setDishIngredients(List<DishIngredient> dishIngredients) {
         this.dishIngredients = dishIngredients;
     }
+
     public Double getDishCost() {
-
         double total = 0;
-
+        if (dishIngredients == null) {
+            return 0.0;
+        }
         for (DishIngredient di : dishIngredients) {
             total += di.getIngredient().getPrice() * di.getQuantityRequired();
         }
-
         return total;
     }
 
