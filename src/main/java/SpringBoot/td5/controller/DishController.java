@@ -23,23 +23,19 @@ public class DishController {
     public List<Dish> getDishes() {
         return dishRepository.findAll();
     }
-
     @PutMapping("/{id}/ingredients")
     public ResponseEntity<?> updateDishIngredients(
             @PathVariable Integer id,
-            @RequestBody(required = false) List<DishIngredient> ingredients
-    ) {
-
+            @RequestBody(required = false) List<DishIngredient> ingredients) {
         if (ingredients == null) {
             return ResponseEntity.badRequest()
-                    .body("Request body is required");
+                    .body("Request body containing ingredients is required");
         }
 
         try {
-            return ResponseEntity.ok(
-                    dishRepository.updateDishIngredients(id, ingredients)
-            );
-        } catch (Exception e) {
+            Dish updatedDish = dishRepository.updateDishIngredients(id, ingredients);
+            return ResponseEntity.ok(updatedDish);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(404)
                     .body("Dish.id=" + id + " is not found");
         }
