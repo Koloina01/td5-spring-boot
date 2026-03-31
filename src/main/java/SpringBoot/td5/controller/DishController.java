@@ -19,11 +19,6 @@ public class DishController {
         this.dishRepository = dishRepository;
     }
 
-    @GetMapping
-    public List<Dish> getDishes() {
-        return dishRepository.findAll();
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getDishById(@PathVariable Integer id) {
         try {
@@ -32,6 +27,14 @@ public class DishController {
             return ResponseEntity.status(404)
                     .body("Dish.id=" + id + " not found");
         }
+    }
+
+    @GetMapping
+    public List<Dish> getDishes(
+            @RequestParam(required = false) Double priceUnder,
+            @RequestParam(required = false) Double priceOver,
+            @RequestParam(required = false) String name) {
+        return dishRepository.findAllFiltered(priceUnder, priceOver, name);
     }
 
     @PutMapping("/{id}/ingredients")
@@ -50,6 +53,19 @@ public class DishController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
                     .body("Dish.id=" + id + " is not found");
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createDishes(@RequestBody List<Dish> dishes) {
+        try {
+            List<Dish> createdDishes = dishRepository.createDishes(dishes);
+            return ResponseEntity.status(201).body(createdDishes);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 }
